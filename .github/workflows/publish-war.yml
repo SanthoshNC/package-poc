@@ -1,0 +1,29 @@
+name: Publish WAR to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main # Change this to your default branch if different
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # Install OpenJDK from AdoptOpenJDK
+          java-version: '11' # Change to your required JDK version
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Publish WAR to GitHub Packages
+        run: |
+          mvn deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
